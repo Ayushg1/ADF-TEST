@@ -1,0 +1,9 @@
+{
+	"name": "firstadfsqltest",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2aa8558d-c068-4e55-924f-5ecc2583f445",
+		"tenantId": "b5996cc2-cf7d-40a9-9c35-3e45633e1277"
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"name": "salesyeardata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage_SALESDATA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat('SALES_IN_',item().YEAR,'.csv')",
+					"type": "Expression"
+				},
+				"fileSystem": "outputsalesdata"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

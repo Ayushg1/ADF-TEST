@@ -1,0 +1,79 @@
+{
+	"name": "send mail notification",
+	"properties": {
+		"activities": [
+			{
+				"name": "check copy data pipeline",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "copy file from source to target and send mail",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "success mail notification",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "check copy data pipeline",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-38.eastus.logic.azure.com:443/workflows/8160838517d3414a803d00da27436c69/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qdJL66ZTz1OLtxISvZD6Gcp3NCwU_aSNQ-0OzZDuWao",
+					"method": "POST",
+					"body": {
+						"value": "{\n\n    \"title\":\"send success mail from adf\",\n    \"message\":\"copy data from source to destination success\",\n    \"pipline name\":\"@{pipeline().Pipeline}\",\n    \"trigger name\":\"@{pipeline().TriggerName}\",\n    \"Time\":\"@{utcnow()}\"\n}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "failure mail notification_copy1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "check copy data pipeline",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-38.eastus.logic.azure.com:443/workflows/8160838517d3414a803d00da27436c69/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qdJL66ZTz1OLtxISvZD6Gcp3NCwU_aSNQ-0OzZDuWao",
+					"method": "POST",
+					"body": {
+						"value": "{\n\n    \"title\":\"send failure mail from adf\",\n    \"message\":\"copy data from source to destination failed\",\n    \"pipline name\":\"@{pipeline().Pipeline}\",\n    \"trigger name\":\"@{pipeline().TriggerName}\",\n    \"Time\":\"@{utcnow()}\"\n}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-12-31T07:31:46Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
